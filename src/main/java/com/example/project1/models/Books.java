@@ -1,23 +1,44 @@
 package com.example.project1.models;
 
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
+@Entity
+@Table(name = "books")
 public class Books {
+    @Id
+    @Column(name = "book_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int book_id;
-    private int id;
+
+
     @NotEmpty(message = "name should not be empty")
     @Size(min = 2, max = 30, message = "size of your name is wrong")
+    @Column(name = "name")
     private String name;
     @NotEmpty(message = "name should not be empty")
     @Size(min = 2, max = 30, message = "size of your name is wrong")
+    @Column(name = "author")
     private String author;
 
-
     @Min(value = 0, message = "year should not be negative")
+    @Column(name = "year")
     private int year;
 
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date takenAt;
+
+    @Transient
+    private boolean expired;
+
+
+    @ManyToOne
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private Person owner;
     public int getBook_id() {
         return book_id;
     }
@@ -28,19 +49,19 @@ public class Books {
 
     public Books(int book_id, int id, String name, String author, int year) {
         this.book_id = book_id;
-        this.id = id;
         this.name = name;
         this.author = author;
         this.year = year;
     }
 
-    public int getId() {
-        return id;
+    public Person getOwner() {
+        return owner;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOwner(Person owner) {
+        this.owner = owner;
     }
+
 
     public Books() {
     }
@@ -67,5 +88,21 @@ public class Books {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public Date getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(Date takenAt) {
+        this.takenAt = takenAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

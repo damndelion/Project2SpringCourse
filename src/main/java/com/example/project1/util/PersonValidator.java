@@ -1,10 +1,8 @@
 package com.example.project1.util;
 
 
-import com.example.project1.dao.PersonDao;
 import com.example.project1.models.Person;
-import com.example.project1.dao.PersonDao;
-import com.example.project1.models.Person;
+import com.example.project1.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -12,10 +10,11 @@ import org.springframework.validation.Validator;
 
 @Component
 public class PersonValidator implements Validator {
-    private final PersonDao personDao;
+
+    private final PeopleService peopleService;
     @Autowired
-    public PersonValidator(PersonDao personDao) {
-        this.personDao = personDao;
+    public PersonValidator( PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
 
     @Override
@@ -27,7 +26,7 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
        Person person = (Person) target;
 
-        if (personDao.getPersonByFullName(person.getName()).isPresent())
+        if (peopleService.getPersonByFullName(person.getName()).isPresent())
             errors.rejectValue("name", "", "Person with this name already exist");
     }
 }
